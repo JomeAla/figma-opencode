@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>OpenCode Builder</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Inter, "Segoe UI", system-ui, sans-serif;
+        background: #0b1120;
+        color: #e2e8f0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      header {
+        padding: 16px 16px 12px;
+        border-bottom: 1px solid #1e293b;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        background: #2563eb;
+        box-shadow: 0 0 12px #2563eb;
+      }
+      .sub {
+        margin-top: 4px;
+        font-size: 11px;
+        color: #64748b;
+      }
+      nav {
+        display: flex;
+        gap: 6px;
+        padding: 10px 12px;
+        border-bottom: 1px solid #1e293b;
+      }
+      .tab {
+        flex: 1;
+        padding: 8px 10px;
+        border: 1px solid #1e293b;
+        border-radius: 8px;
+        background: #111c31;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .tab:hover {
+        border-color: #334155;
+        color: #e2e8f0;
+      }
+      .tab.active {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #ffffff;
+      }
+      main {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px 12px 18px;
+      }
+      main::-webkit-scrollbar {
+        width: 8px;
+      }
+      main::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 4px;
+      }
+      .panel {
+        display: none;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .panel.active {
+        display: flex;
+      }
+      .group-title {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #64748b;
+        margin-bottom: 8px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .grid.single {
+        grid-template-columns: 1fr;
+      }
+      .btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border: 1px solid #1e293b;
+        border-radius: 9px;
+        background: #111c31;
+        color: #e2e8f0;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .btn:hover:not(:disabled) {
+        background: #16233d;
+        border-color: #2563eb;
+        transform: translateY(-1px);
+      }
+      .btn:active:not(:disabled) {
+        transform: translateY(0);
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      .btn .icon {
+        width: 22px;
+        height: 22px;
+        flex: 0 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        background: #1d2c4a;
+        color: #60a5fa;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .btn.warn .icon {
+        background: #3a1d1d;
+        color: #f87171;
+      }
+      .btn.primary .icon {
+        background: #1e3a8a;
+        color: #93c5fd;
+      }
+      footer {
+        padding: 10px 14px;
+        border-top: 1px solid #1e293b;
+        background: #0d1526;
+        font-size: 11px;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 38px;
+      }
+      .pulse {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #10b981;
+        flex: 0 0 7px;
+      }
+      .pulse.busy {
+        background: #f59e0b;
+        animation: blink 0.9s infinite;
+      }
+      .pulse.error {
+        background: #ef4444;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.25;
+        }
+      }
+      .hint {
+        font-size: 11px;
+        color: #64748b;
+        line-height: 1.5;
+        border: 1px dashed #1e293b;
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand"><span class="dot"></span> OpenCode Builder</div>
+      <div class="sub">Add one section at a time to the canvas</div>
+    </header>
+
+    <nav>
+      <button class="tab active" data-tab="mobile">Mobile</button>
+      <button class="tab" data-tab="web">Web</button>
+      <button class="tab" data-tab="system">System</button>
+    </nav>
+
+    <main>
+      <section class="panel active" data-panel="mobile">
+        <div>
+          <div class="group-title">Chrome</div>
+          <div class="grid">
+            <button class="btn" data-action="mobile.statusBar"><span class="icon">SB</span>Status Bar</button>
+            <button class="btn" data-action="mobile.topBar"><span class="icon">TB</span>Top Bar</button>
+            <button class="btn" data-action="mobile.searchBar"><span class="icon">SR</span>Search Bar</button>
+          </div>
+        </div>
+        <div>
+          <div class="group-title">Content</div>
+          <div class="grid">
+            <button class="btn" data-action="mobile.hero"><span class="icon">HR</span>Hero</button>
+            <button class="btn" data-action="mobile.sectionTitle"><span class="icon">ST</span>Section Title</button>
+            <button class="btn" data-action="mobile.card"><span class="icon">CD</span>Card</button>
+            <button class="btn" data-action="mobile.listItem"><span class="icon">LI</span>List Item</button>
+            <button class="btn" data-action="mobile.grid"><span class="icon">GR</span>2-Col Grid</button>
+          </div>
+        </div>
+        <div>
+          <div class="group-title">Actions</div>
+          <div class="grid">
+            <button class="btn" data-action="mobile.bottomNav"><span class="icon">BN</span>Bottom Nav</button>
+            <button class="btn" data-action="mobile.fab"><span class="icon">FB</span>Floating Button</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="web">
+        <div>
+          <div class="group-title">Chrome</div>
+          <div class="grid single">
+            <button class="btn" data-action="web.navbar"><span class="icon">NV</span>Navbar</button>
+          </div>
+        </div>
+        <div>
+          <div class="group-title">Sections</div>
+          <div class="grid">
+            <button class="btn" data-action="web.hero"><span class="icon">HR</span>Hero</button>
+            <button class="btn" data-action="web.logos"><span class="icon">LC</span>Logo Cloud</button>
+            <button class="btn" data-action="web.features"><span class="icon">FG</span>Feature Grid</button>
+            <button class="btn" data-action="web.pricing"><span class="icon">PR</span>Pricing</button>
+            <button class="btn" data-action="web.testimonial"><span class="icon">TS</span>Testimonial</button>
+            <button class="btn" data-action="web.cta"><span class="icon">CT</span>CTA Banner</button>
+            <button class="btn" data-action="web.footer"><span class="icon">FT</span>Footer</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="system">
+        <div>
+          <div class="group-title">Design Tokens</div>
+          <div class="grid single">
+            <button class="btn primary" data-action="system.styles"><span class="icon">DS</span>Create Color &amp; Text Styles</button>
+          </div>
+        </div>
+        <div>
+          <div class="group-title">Canvas</div>
+          <div class="grid single">
+            <button class="btn warn" data-action="system.clear"><span class="icon">CL</span>Clear Generated Frames</button>
+          </div>
+        </div>
+        <div class="hint">
+          Each button adds a single section to a root frame named
+          "OpenCode - Mobile" or "OpenCode - Web". Build up a screen
+          piece by piece so the plugin stays fast and never builds
+          everything at once.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span class="pulse" id="pulse"></span>
+      <span id="status">Ready</span>
+    </footer>
+
+    <script>
+      const statusEl = document.getElementById("status");
+      const pulseEl = document.getElementById("pulse");
+      const buttons = Array.from(document.querySelectorAll(".btn[data-action]"));
+      let busy = false;
+
+      function setBusy(value, message) {
+        busy = value;
+        buttons.forEach((b) => (b.disabled = value));
+        pulseEl.classList.toggle("busy", value);
+        if (message) statusEl.textContent = message;
+      }
+
+      function setStatus(message, isError) {
+        statusEl.textContent = message;
+        pulseEl.classList.remove("busy", "error");
+        if (isError) pulseEl.classList.add("error");
+      }
+
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t === tab));
+          document.querySelectorAll(".panel").forEach((p) =>
+            p.classList.toggle("active", p.dataset.panel === tab.dataset.tab)
+          );
+        });
+      });
+
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (busy) return;
+          setBusy(true, "Working...");
+          parent.postMessage({ pluginMessage: { type: "create", action: btn.dataset.action } }, "*");
+        });
+      });
+
+      window.onmessage = (event) => {
+        const msg = event.data.pluginMessage;
+        if (!msg) return;
+        if (msg.type === "done") {
+          setBusy(false);
+          setStatus(msg.message, false);
+        } else if (msg.type === "error") {
+          setBusy(false);
+          setStatus(msg.message, true);
+        } else if (msg.type === "status") {
+          statusEl.textContent = msg.message;
+        }
+      };
+    </script>
+  </body>
+</html>
